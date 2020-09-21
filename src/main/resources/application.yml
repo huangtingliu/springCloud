@@ -1,7 +1,0 @@
-spring.application.name: spring-cloud
-
-server.port: 80
-
-eureka.client.serviceUrl.defaultZone: http://localhost:8761/eureka/
-
-spring.thymeleaf.cache: false

@@ -1,0 +1,102 @@
+spring:
+  profiles: dev
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      enabled: true  #设false可以禁用gateway
+      routes:
+#      - id: order_route
+#        uri: lb://USER-SERVICE2   #注册中心方式
+#        predicates:
+#          - Path=/user-api/**
+#          - Weight=group1, 5 #权重匹配,10%的请求到这里
+#        filters:
+#          - RewritePath=/user-api, /
+      - id: user_route
+#        uri: http://localhost:8092 #具体地址方式
+        uri: lb://USER-SERVICE   #注册中心方式
+#          predicates: #routes完整配置
+#          - name: Cookie
+#            args:
+#              name: mycookie
+#              regexp: mycookievalue
+        predicates: #routes快捷配置写法
+        - Weight=group1, 5 #权重匹配,90%的请求到这里，若多个匹配路由都不加此项的话将只匹配到配置的第一个，若有加此项则不加此项的其他请求将失效
+#        - Cookie=mycookie,mycookievalue  #匹配cookie名称为mycookie且值为mycookievalue的请求,后一个参数为正则表达式
+#        - After=2017-01-20T17:42:47.789-07:00[Asia/Shanghai] #匹配2017年1月20日以后发出的请求
+#        - Before=2017-01-20T17:42:47.789-07:00[Asia/Shanghai] #匹配2017年1月20日之前发出的请求
+#        - Between=2017-01-20T17:42:47.789-07:00[Asia/Shanghai], 2017-01-21T17:42:47.789-07:00[Asia/Shanghai] #此路由匹配在2017年1月20日17点42分之后和2017年1月21日17点42分之前发出的请求。这对于维护窗口非常有用。
+#        - Header=X-Request-Id, \d+ #请求头部匹配，两个参数，后一个参数为正则表达式
+#        - Host=**.somehost.org,**.anotherhost.org #主机匹配，多个逗号隔开
+#        - Method=GET,POST #匹配请求方法
+#        - Path=/red/*,/blue/*  #匹配路径,效果：/red/*会转发到http://localhost:8092/red/*
+        - Path=/user-api/**  #匹配路径,效果：/user-api/**会转发到http://localhost:8092/user-api/**  搭配RewritePath或SetPath使用可以转发到http://localhost:8092/**
+#        - Query=green  #匹配查询参数包含green的请求
+#        - Query=name, zhangsan  #匹配查询参数为name，值为zhangsan的请求
+#        - RemoteAddr=192.168.1.1/24  #请求ip匹配，ip/子网掩码
+        filters: #多个的话按配置上下顺序执行
+#          - PrefixPath=/user-api #会再请求地址前面加上该值，如 /red/* 会转发到/user-api/red/*
+#          - RewritePath=/user-api, / #替换路径 效果：将 /user-api/a/b 变成 /a/b
+#          - SetPath=/{path} #重新设置路径 ，效果：/user-api/a 变成 /a
+          - StripPrefix=1 #清除掉路径前缀级数: 为1：/user-api/red/a ==> /red/a  2：/user-api/red/a ==> /a
+#          - Hystrix=myCommandName #断路器配置1，需要添加spring-cloud-starter-netflix-hystrix依赖（未测试）
+#          - name: Hystrix #断路器配置2，注意名称不能更改，需要添加spring-cloud-starter-netflix-hystrix依赖，Netflix已经将Hystrix置于仅维护模式，我们建议您使用Resilience4J
+#            args:
+#              name: fallbackcmd
+#              fallbackUri: forward:/fallback  #服务断了的话用该地址代替
+#          - CircuitBreaker=myCircuitBreaker #断路器配置3
+#          - name: CircuitBreaker  #断路器配置3，注意名称不能更改,需要添加spring-cloud-starter-netflix-hystrix依赖或spring-cloud-starter-circuitbreaker-reactor-resilience4j依赖
+#            args:
+#              name: myCircuitBreaker
+#              fallbackUri: forward:/fallback2
+#          - name: FallbackHeaders #发生断路器返回时添加特殊头（未测试）
+#            args:
+#              executionExceptionTypeHeaderName: fallback-Header
+#          - AddRequestHeader=X-Request-name, huangtl #添加请求头
+#          - AddRequestParameter=name, huangtl #添加请求参数name=huangtl
+#          - AddResponseHeader=X-Response-name, huangtl #添加相应头
+#          - MapRequestHeader=host, host1 #将host请求头替换成host1请求头重新生成内容
+#          - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin #删除重复的响应头，空格隔开
+#          - RemoveRequestHeader=x-forwarded-for #转发前删除请求头
+#          - RemoveResponseHeader=Content-Length #删除响应头
+#          - RemoveRequestParameter=name #删除请求参数
+#          - SetRequestHeader=X-Request-Red, Blue #替换所有请求头
+#          - SetResponseHeader=X-Response-Red, Blue #替换所有响应头
+#          - SaveSession #传递会话状态，集成了Spring Security的话至关重要
+#          - SetStatus=401 #替换http状态
+            #重试请求条件 https://docs.spring.io/spring-cloud-gateway/docs/2.2.4.RELEASE/reference/html/#the-retry-gatewayfilter-factory
+#          - name: Retry #
+#            args:
+#              retries: 3 #重试次数
+#              statuses: BAD_GATEWAY #应该重试的HTTP状态码
+#              methods: GET,POST #应该重试的HTTP请求方法
+#              backoff:
+#                firstBackoff: 10ms
+#                maxBackoff: 50ms
+#                factor: 2
+#                basedOnPreviousValue: false
+#          - name: RequestSize #请求大小限制
+#            args:
+#              maxSize: 5000000 #单位B，也可以写成5000KB，或者5MB
+#          - name: SetRequestHost #重新设置主机头
+#            args:
+#              host: example.org
+    loadbalancer:
+      ribbon:
+        enabled: false
+server:
+  port: 8091
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
+#    healthcheck:
+#      enabled: true
+
+#hystrix.command.fallbackcmd.execution.isolation.thread.timeoutInMilliseconds: 5000 #断路器5秒的超时生效，似乎无效
+
+
+
+
