@@ -2,7 +2,7 @@ package com.huangtl.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * @Description eureka服务启动类
@@ -10,7 +10,8 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
  * @Date 2020/9/1 15:30
  **/
 @SpringBootApplication
-@EnableEurekaClient
+//@EnableEurekaClient //当使用nacos时注释掉
+@EnableDiscoveryClient
 public class GateWayApp {
 
     public static void main(String[] args) {

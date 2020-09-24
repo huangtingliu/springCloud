@@ -8,14 +8,16 @@ import org.springframework.http.MediaType;
 import reactor.core.publisher.Mono;
 
 /**
- * @Description TODO
+ * @Description 编程式的路由配置
  * @Author huangtl
  * @Date 2020/9/21 20:19
  **/
 @Configuration
 public class RouteConfig {
 
-    //替换请求体路由，要用post请求
+    /**
+     * 替换请求体路由，要用post请求
+     */
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         //postman post请求http://localhost:8091/create 测试
@@ -23,7 +25,13 @@ public class RouteConfig {
                 .route("rewrite_request_obj", r -> r.path("/create")
                         .filters(f -> f.prefixPath("/rewrite-body")
                                 .modifyRequestBody(String.class, NewBody.class, MediaType.APPLICATION_JSON_VALUE,
-                                        (exchange, s) -> {return Mono.just(new NewBody(s.toUpperCase()));}))
+                                        (exchange, s) -> {
+                                    return Mono.just(new NewBody(s.toUpperCase()));
+                                }).modifyResponseBody(String.class, String.class,
+                                        (exchange, s) -> {
+                                            System.out.println("修改响应体"+s);
+                                            return Mono.just(s.toUpperCase());
+                                }))
                         .uri("lb://ORDER-SERVICE")).build();
     }
 

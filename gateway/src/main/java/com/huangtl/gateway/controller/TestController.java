@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Description TODO
+ * @Description 网关
  * @Author huangtl
  * @Date 2020/9/1 17:02
  **/
@@ -15,5 +15,4 @@ public class TestController {
     public String hello(){
         return "这是网关服务";
     }
-
 }

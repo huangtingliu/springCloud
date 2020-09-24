@@ -21,4 +21,9 @@ public class FallbackController {
         return "这是fallback2服务";
     }
 
+    @RequestMapping("/sentinel-fallback")
+    public String sentinelFallback(){
+        return "这是sentinel-fallback服务";
+    }
+
 }

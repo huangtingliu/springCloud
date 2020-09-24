@@ -1,0 +1,4 @@
+都是官方默认的配置
+浏览器访问：http://localhost:8080/
+账号：sentinel
+密码：sentinel

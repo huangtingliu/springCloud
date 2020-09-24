@@ -40,6 +40,7 @@ public class RootController {
 
     @RequestMapping("/red/a")
     public String reda(){
+        System.out.println("这是用户/red/a服务");
         return "这是用户/red/a服务";
     }
 }

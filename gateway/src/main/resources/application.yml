@@ -1,6 +1,9 @@
 spring:
+  application:
+    name: gateway
   profiles:
-    active: dev
+#    active: simple
+    active: sentinel
 
-
-
+server:
+  port: 8091

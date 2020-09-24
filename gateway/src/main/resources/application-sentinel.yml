@@ -1,0 +1,51 @@
+#本配置重点看sentinel部分
+spring:
+  cloud:
+    nacos:
+      discovery: false #若不适用nacos则禁用该注册中心
+#      discovery:
+#        server-addr: 192.168.67.129:8848  #本配置使用nacos注册中心
+    sentinel: #断路器配置项参考文档 https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc#%E5%85%B3%E4%BA%8E-sentinel-starter-%E6%9B%B4%E5%A4%9A%E7%9A%84%E9%85%8D%E7%BD%AE%E9%A1%B9%E4%BF%A1%E6%81%AF
+      #请注意。这些配置只有在 Servlet 环境下才会生效，RestTemplate 和 Feign 针对这些配置都无法生效
+      transport:
+        port: 8719
+        dashboard: localhost:8080  #启动本项目后需要请求一次才能向sentinel控制台注册
+      servlet:
+        block-page: xxx #自定义的跳转 URL，当请求被限流时会自动跳转至设定好的 URL
+      scg:
+        fallback:
+          mode: response #熔断后的响应模式(选择 redirect or response)
+          redirect: /sentinel-fallback #响应模式为 'redirect' 模式对应的重定向 URL
+          response-body: 这是sentinel限流后的响应数据 #响应模式为 'response' 模式对应的响应内容
+#          response-status: 429 #响应模式为 'response' 模式对应的响应码，默认429
+#          content-type: application/json #响应模式为 'response' 模式对应的 content-type
+      #动态数据源支持 https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc#%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%90%E6%94%AF%E6%8C%81
+      #动态规则扩展(拉模式 推模式 nacos zookeeper等) https://github.com/alibaba/Sentinel/wiki/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%99%E6%89%A9%E5%B1%95#datasource-%E6%89%A9%E5%B1%95
+      #eureka动态数据源配置 https://github.com/alibaba/Sentinel/tree/master/sentinel-extension/sentinel-datasource-eureka
+      datasource: #与com.alibaba.csp.sentinel.init.InitFunc方式二选一即可
+        ds2:
+          nacos: #属性查看官方的NacosDataSourceProperties类，需要在nacos那边配置规则json格式，见https://github.com/alibaba/Sentinel/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8#%E8%A7%84%E5%88%99%E7%9A%84%E7%A7%8D%E7%B1%BB
+            server-addr: 192.168.67.129:8848
+            data-id: sentinel
+            group-id: Sentinel:Demo
+            data-type: json
+            rule-type: flow
+
+    gateway:
+      default-filters:
+        - StripPrefix=1
+      routes:
+      - id: nacos_provider_route
+        uri: http://localhost:8081 #具体地址方式
+#        uri: lb://nacos-provider   #注册中心方式
+        predicates: #routes快捷配置/完整配置写法
+        - Path=/user-api/**  #匹配路径,效果：/user-api/**会转发到http://localhost:8092/user-api/**  搭配RewritePath或SetPath使用可以转发到http://localhost:8092/**
+
+    loadbalancer:
+      ribbon:
+        enabled: false
+
+eureka:
+  client:
+    enabled: false  #因为父工程统一依赖了eureka,跟nacos注册中心冲突了,所以禁用掉eureka
+
