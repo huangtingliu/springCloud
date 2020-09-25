@@ -1,18 +1,17 @@
 # spring cloud 学习
-# version
+# 版本
 - spring-cloud Hoxton.SR8
 - spring-boot 2.3.3.RELEASE
 
 
 # spring cloud 子项目
-- 注册中心 eureka
+- 注册中心 nacos、eureka
 - 网关 spring gateway
-- 断路器 hystrix、Resilience4J、Sentinel未完成
+- 断路器 Sentinel、hystrix、Resilience4J
 - 未完待续...
 
-
-#nacos
-项目模块
+# nacos注册中心
+demo项目
 - nacos-service-provider  （提供服务项目）
 - nacos-service-consumer  （调用服务项目）
 - gateway (用到sentinel+nacos)
@@ -59,7 +58,9 @@ spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848
 management.endpoints.web.exposure.include=*
 ```
 
-#Sentinel相关
+# Sentinel断路器
+demo项目
+- gateway  （网关项目，使用sentinel配合nacos扩展数据源配置限流规则）
 #### Sentinel 控制台
 - jar包下载：https://github.com/alibaba/Sentinel/releases
 - 启动脚本：
@@ -100,7 +101,22 @@ spring:
 - [文档1](https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc#%E5%8A%A8%E6%80%81%E6%95%B0%E6%8D%AE%E6%BA%90%E6%94%AF%E6%8C%81)
 - [文档2](https://github.com/alibaba/Sentinel/wiki/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%99%E6%89%A9%E5%B1%95#datasource-%E6%89%A9%E5%B1%95)
 - [nacos配置sentinel规则json各属性](https://github.com/alibaba/Sentinel/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8#%E8%A7%84%E5%88%99%E7%9A%84%E7%A7%8D%E7%B1%BB)
-实现效果：nacos发布配置后限流效果自动生效
+
+实现效果：nacos发布配置后限流效果自动生效  
+demo可查看gateway项目application-sentinel.yml配置文件：
+```
+spring:
+  cloud:
+    sentinel: 
+      datasource: 
+        ds2:
+          nacos: 
+            server-addr: 192.168.67.129:8848
+            data-id: sentinel
+            group-id: Sentinel:Demo
+            data-type: json
+            rule-type: flow
+```
 #### OpenFeign 支持
 - [文档](https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc#openfeign-%E6%94%AF%E6%8C%81)
 
