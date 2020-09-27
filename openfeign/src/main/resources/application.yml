@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: openfeign
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false #  Netflix Ribbon处于维护模式，不使用，不禁用的话启动会报错，可改用Spring Cloud LoadBalancer
+
+server:
+  port: 8094
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8762/eureka/
+
+logging:
+  level:
+    com.huangtl.openfeign.service.OrderService: DEBUG  #feign请求日志打印，只对DEBUG有效

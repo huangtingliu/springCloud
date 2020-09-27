@@ -19,6 +19,11 @@ public class RootController {
         return "这是用户服务";
     }
 
+    @RequestMapping("/hello")
+    public String sayHello(){
+        return "这是用户hello服务";
+    }
+
     @RequestMapping("/a")
     public String a(HttpServletRequest request){
         System.out.println("打印请求头");

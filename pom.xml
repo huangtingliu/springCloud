@@ -23,6 +23,7 @@
         <module>order-service</module>
         <module>nacos-service-provider</module>
         <module>nacos-service-consumer</module>
+        <module>openfeign</module>
     </modules>
     <packaging>pom</packaging>
     <name>springCloud-parent</name>

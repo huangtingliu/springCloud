@@ -8,6 +8,7 @@
 - 注册中心 nacos、eureka
 - 网关 spring gateway
 - 断路器 Sentinel、hystrix、Resilience4J
+- 远程调用 openfeign
 - 未完待续...
 
 # nacos注册中心
@@ -118,6 +119,7 @@ spring:
             rule-type: flow
 ```
 #### OpenFeign 支持
+- 项目（openfeign项目请求userService和orderService项目）
 - [文档](https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/sentinel.adoc#openfeign-%E6%94%AF%E6%8C%81)
 
 #### RestTemplate 支持 
