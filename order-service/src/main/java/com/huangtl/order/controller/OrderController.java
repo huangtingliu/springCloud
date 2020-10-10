@@ -1,10 +1,9 @@
 package com.huangtl.order.controller;
 
 import cn.hutool.json.JSONObject;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.huangtl.order.service.RedisService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -42,5 +41,20 @@ public class OrderController {
         list.add("order2");
         list.add("order3");
         return list;
+    }
+
+    @Autowired
+    private RedisService redisService;
+
+    //设置redis值
+    @RequestMapping("/redis/set/{name}/{value}")
+    public String setRedis(@PathVariable(value = "name") String name,@PathVariable(value = "value") String value){
+        redisService.set(name,value);
+        return "ok";
+    }
+
+    @RequestMapping("/redis/get/{name}")
+    public String getRedis(@PathVariable(value = "name") String name){
+        return redisService.get(name);
     }
 }
