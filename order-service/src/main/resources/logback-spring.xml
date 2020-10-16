@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <appender name="SENTRY" class="io.sentry.logback.SentryAppender" >
+        <options>
+            <!--sentry-spring-boot-starter依赖在yml配置文件配置dsn，不需要在这里配-->
+<!--            <dsn>http://2591459bfe354bd4b16d0474ddbb979b@10.10.4.23:19000/2</dsn>-->
+            <shutdownTimeout>2000</shutdownTimeout>
+            <flushTimeoutMillis>15000</flushTimeoutMillis>
+            <debug>false</debug>
+            <maxBreadcrumbs>100</maxBreadcrumbs>
+            <release>1.0.0</release>
+            <environment>production</environment>
+            <sampleRate>1.0</sampleRate>
+            <attachThreads>false</attachThreads>
+            <attachStacktrace>false</attachStacktrace>
+            <serverName>host-4</serverName>
+            <connectionTimeoutMillis>5000</connectionTimeoutMillis>
+            <readTimeoutMillis>5000</readTimeoutMillis>
+            <!--            &ndash;&gt;-->
+        </options>
+        <minimumEventLevel>WARN</minimumEventLevel>
+        <minimumBreadcrumbLevel>DEBUG</minimumBreadcrumbLevel>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="SENTRY" />
+    </root>
+</configuration>

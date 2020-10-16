@@ -2,6 +2,7 @@ package com.huangtl.order.controller;
 
 import cn.hutool.json.JSONObject;
 import com.huangtl.order.service.RedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
  * @Date 2020/9/1 17:02
  **/
 @RestController
+@Slf4j
 public class OrderController {
 
     @RequestMapping("/create")
@@ -62,8 +64,17 @@ public class OrderController {
     @RequestMapping("/session")
     public String session(HttpSession session){
         System.out.println(session.getId());
-        System.out.println(session.getAttribute("uid"));
         return session.getId();
+    }
+
+    @RequestMapping("/sentry")
+    public String sentry(){
+        log.info("测试sentry打印info日志");
+        log.debug("测试sentry打印debug日志");
+        log.warn("测试sentry打印warn日志");
+        log.trace("测试sentry打印trace日志");
+        log.error("测试sentry打印error日志");
+        return "ok";
     }
 
 }
