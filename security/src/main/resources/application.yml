@@ -1,0 +1,9 @@
+server:
+  port: 8096
+
+spring:
+  security:
+    user:
+      name: huangtl
+      password: 123456
+
